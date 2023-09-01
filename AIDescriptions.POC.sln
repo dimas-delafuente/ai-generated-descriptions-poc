@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIDescriptions.Web", "AIDescriptions.Web\AIDescriptions.Web.csproj", "{5ACF89E7-131B-4990-9C12-9666163E1532}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AIDescriptions.Web.Tests", "AIDescriptions.Web.Tests\AIDescriptions.Web.Tests.csproj", "{96DDB11A-E652-48B7-88B0-2E5F96CBBA61}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bard-python-api", "bard-python-api", "{E632F7F0-5375-4F94-BA6A-2CDC255DA61C}"
+	ProjectSection(SolutionItems) = preProject
+		bard-python-api\Dockerfile = bard-python-api\Dockerfile
+		bard-python-api\requirements.txt = bard-python-api\requirements.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{D148CD7A-BD0A-4842-B6A1-0C819832A7A9}"
+	ProjectSection(SolutionItems) = preProject
+		bard-python-api\app\main.py = bard-python-api\app\main.py
+		bard-python-api\app\prompt_schema.py = bard-python-api\app\prompt_schema.py
+		bard-python-api\app\prompt_service.py = bard-python-api\app\prompt_service.py
+		bard-python-api\app\__init__.py = bard-python-api\app\__init__.py
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "huggingchat-python-api", "huggingchat-python-api", "{17062031-BE04-4329-9E39-016FBB517CB5}"
+	ProjectSection(SolutionItems) = preProject
+		huggingchat-python-api\cookies_snapshot.json = huggingchat-python-api\cookies_snapshot.json
+		huggingchat-python-api\Dockerfile = huggingchat-python-api\Dockerfile
+		huggingchat-python-api\requirements.txt = huggingchat-python-api\requirements.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{A78FAAF0-1A1B-4212-A8CD-67751E985D33}"
+	ProjectSection(SolutionItems) = preProject
+		huggingchat-python-api\app\main.py = huggingchat-python-api\app\main.py
+		huggingchat-python-api\app\prompt_schema.py = huggingchat-python-api\app\prompt_schema.py
+		huggingchat-python-api\app\prompt_service.py = huggingchat-python-api\app\prompt_service.py
+		huggingchat-python-api\app\__init__.py = huggingchat-python-api\app\__init__.py
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ACF89E7-131B-4990-9C12-9666163E1532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ACF89E7-131B-4990-9C12-9666163E1532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ACF89E7-131B-4990-9C12-9666163E1532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ACF89E7-131B-4990-9C12-9666163E1532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96DDB11A-E652-48B7-88B0-2E5F96CBBA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96DDB11A-E652-48B7-88B0-2E5F96CBBA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96DDB11A-E652-48B7-88B0-2E5F96CBBA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96DDB11A-E652-48B7-88B0-2E5F96CBBA61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D148CD7A-BD0A-4842-B6A1-0C819832A7A9} = {E632F7F0-5375-4F94-BA6A-2CDC255DA61C}
+		{A78FAAF0-1A1B-4212-A8CD-67751E985D33} = {17062031-BE04-4329-9E39-016FBB517CB5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {628A9509-F826-4EAF-97A9-9FC3D2E6D0CB}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,167 @@
+﻿@page "/demo2"
+@using AIDescriptions.Web.Samples;
+@using AIDescriptions.Web.Services
+@using System.Web;
+@using System.Text.RegularExpressions;
+
+@inject HuggingChatService huggingChat
+@inject BardChatService bardChat
+
+<Loading ShowSpinner="@loading"></Loading>
+
+<PageTitle>Demo 2</PageTitle>
+
+<h1>AI Generated Descriptions : Nail Polish</h1>
+
+<RadzenRow Gap="1rem" Style="width: 80%; margin: 40px auto;">
+	<RadzenColumn Size="12" SizeSM="12">
+		<RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal">
+			<RadzenFormField Text="Attributes">
+				<RadzenDropDown @bind-Value=@selectedAttributes Data=@data TextProperty="Key" ValueProperty="Key"
+								Multiple=true AllowClear=true Chips=true />
+			</RadzenFormField>
+
+			<RadzenFormField Text="Characters" Variant="Variant.Outlined">
+				<RadzenNumeric @bind-Value="@characters" />
+			</RadzenFormField>
+
+			<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+				<RadzenLabel Text="Format as HTML" />
+				<RadzenSwitch @bind-Value="@asHtml" />
+			</RadzenStack>
+
+
+		</RadzenStack>
+	<div class="row rz-mt-5">
+
+		<RadzenSelectBar @bind-Value=@chatType TValue="int" class="mb-5">
+			<Items>
+				<RadzenSelectBarItem Text="Bard" Value="1" />
+				<RadzenSelectBarItem Text="HuggingChat" Value="2" />
+			</Items>
+		</RadzenSelectBar>
+		</div>
+		<button class="btn btn-primary" @onclick="GenerateDescription">Generate description</button>
+	</RadzenColumn>
+</RadzenRow>
+
+
+<RadzenRow>
+	<RadzenColumn>
+		<RadzenFieldset AllowCollapse="true" Style="width: 80%; margin: 40px auto;">
+			<HeaderTemplate>
+				<span class="d-inline-flex align-items-center align-middle">
+					<RadzenIcon class="me-1" /><b>Core Attributes</b>
+				</span>
+			</HeaderTemplate>
+			<ChildContent>
+				<RadzenDataList Data="@InventoryItemSamples.NailPolish.CoreAttributes">
+					<Template Context="attribute">
+						<div class="row">
+							<div>
+								<b>@(attribute.Key)</b>
+							</div>
+							<p>@(attribute.Value)</p>
+						</div>
+					</Template>
+				</RadzenDataList>
+			</ChildContent>
+		</RadzenFieldset>
+
+		<RadzenFieldset AllowCollapse="true" Style="width: 80%; margin: 40px auto;">
+			<HeaderTemplate>
+				<span class="d-inline-flex align-items-center align-middle">
+					<RadzenIcon class="me-1" /><b>Seller Attributes</b>
+				</span>
+			</HeaderTemplate>
+			<ChildContent>
+				<RadzenDataList Data="@InventoryItemSamples.NailPolish.AdditionalAttributes">
+					<Template Context="attribute">
+						<div class="row">
+							<div>
+								<b>@(attribute.Key)</b>
+							</div>
+							<p>@(attribute.Value)</p>
+						</div>
+					</Template>
+				</RadzenDataList>
+			</ChildContent>
+		</RadzenFieldset>
+	</RadzenColumn>
+
+	<RadzenColumn>
+		@if (response != null)
+		{
+			<RadzenHtmlEditor @bind-Value=@response Style="height: 500px;" Mode="HtmlEditorMode.Source">
+			</RadzenHtmlEditor>
+		}
+	</RadzenColumn>
+</RadzenRow>
+
+@code {
+	private IEnumerable<string> selectedAttributes = Enumerable.Empty<string>();
+	private List<string> selectedExtraAttributes = new List<string>();
+
+	private int characters = 2000;
+	private bool asHtml = false;
+	private int chatType = 1;
+
+	private bool loading = false;
+	private string response;
+
+	public class SelectItem
+	{
+		public string Key { get; set; }
+		public string Value { get; set; }
+	}
+
+	IEnumerable<SelectItem> data = InventoryItemSamples.NailPolish.AllAttributes
+		.Select(_ => new SelectItem
+			{
+				Key = _.Key,
+				Value = _.Value
+			});
+
+	private async void GenerateDescription()
+	{
+		response = null;
+		loading = true;
+
+		var attributes = InventoryItemSamples.NailPolish.AllAttributes
+			.Where(k => selectedAttributes.Contains(k.Key))
+			.ToDictionary(_ => _.Key, _ => _.Value);
+
+		var prompt = new PromptBuilder(asHtml)
+			.Start(characters)
+			.WithCoreDetails(attributes)
+			.ToPrompt();
+
+		IChatService chatService = chatType == 1 ? bardChat : huggingChat;
+
+		response = await chatService.GetResponse(prompt);
+		response = ParseResponse(response);
+		loading = false;
+
+		await InvokeAsync(() => { StateHasChanged(); });
+	}
+
+	private string ParseResponse(string response)
+	{
+		const string startText = "[DESCRIPTION]";
+		const string endText = "[/DESCRIPTION]";
+
+		response = Regex.Unescape(response);
+		response = HttpUtility.HtmlDecode(response
+			.Replace("\\\"", string.Empty)
+			.Replace(@"\\\", @"\")
+			.Replace(@"\r\n\r\n", @"\n")
+		);
+
+		var start = response.IndexOf(startText) + startText.Length;
+		var length = response.IndexOf(endText) - start;
+
+		response = response.Substring(start, length);
+
+		return response;
+	}
+}

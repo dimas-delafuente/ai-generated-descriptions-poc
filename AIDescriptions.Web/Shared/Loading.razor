@@ -1,0 +1,13 @@
+﻿﻿@if (ShowSpinner)
+{
+    <div class="loadingScreen" id="loadingScreen">
+        <RadzenProgressBarCircular ShowValue="ShowSpinner" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Large">
+            <Template>Wait</Template>
+        </RadzenProgressBarCircular>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool ShowSpinner { get; set; } = false;
+}
